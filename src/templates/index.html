@@ -1,0 +1,306 @@
+
+<html lang="en">
+ 
+<head>
+    <title>Ucv admisión 2019</title>
+    <link href="../static/bootstrap4.3/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="">
+        <div class="row" style=" height: 100%;">
+          <div class="col">
+              <div class="jumbotron bgjumb">
+                  <div class="header">
+                      <img id="logo" src="../static/images/UCV.png" alt=""> <h3 class="title">Universidad Central de Venezuela</h3>
+                         
+                   </div>
+                 
+              </div>
+          </div>
+          <div class="col">
+            <div class="contaner cont_nav ">
+              
+                <nav class="mynav">
+                  
+                    <ul id="ejm2">
+                        <li><a role="button" id="home">Inicio</a></li>
+                        <li><a role="button" id="singin">Sesión</a></li>
+                        <li><a role="button" id="singup">Registrarse</a></li>
+                 
+                    </ul>
+                  </nav>
+             
+            </div>
+     
+           <div class="routers"></div>
+             
+            </div>
+          
+
+             
+          </div>
+        </div>
+      
+ 
+
+
+</body>
+ 
+</html>
+
+<style>
+.header{
+  text-align: center;
+}
+.title{
+  color: white;
+}
+.cont_nav{
+  height: 5%;
+}
+.cont-display{
+  height: 95%;
+}
+.col{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.contsingin{
+  width: 60%;
+  margin: auto;
+}
+.bgsingup{
+  height: 100%;
+}
+#titleSlide{
+  letter-spacing: 0.2em;
+  text-align: center;
+  
+  
+}
+#subtitleSlide{
+  letter-spacing: 1em;
+  text-align: center;
+  text-indent: 0.9em;
+  
+}
+.bgjumb{
+    background-image: url("../static/images/estatua.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    border-radius: 0;
+    margin: 0;
+}
+.leftpart{
+  padding: 0;
+  margin: 0;
+}
+#titleSlide{
+    color: rgb(72, 219, 109);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#logo{
+  width: 50px;
+}
+.routers{
+  height: 95%;
+};
+h3{
+  display: inline;
+  margin-left: 25px;
+}
+ul#ejm2 li a{
+        position: relative;
+        font-weight:bold;
+       
+        margin: 0px 15px;
+    }
+    ul#ejm2 li a:after{
+        position: absolute;
+        bottom: 7px;
+        left: 0px;
+        width: 100%;
+        height: 4px;
+        background-color: rgb(0, 0, 0);
+        content: "";
+        opacity: 0;
+        transition: opacity 0.3s ease 0s, transform 0.3s ease 0s;
+        transform: translateY(20px);        
+    }
+    ul#ejm2 li a:hover:after{
+        opacity:1;
+        transform: translateY(15px)
+    }
+
+
+h1 {
+  text-align: center;
+  margin: 80px 0;
+}
+
+.mynav ul {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding: 0;
+}
+
+.mynav li:not(:last-child) {
+  margin-right: 20px;
+}
+
+.mynav a {
+  display: block;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  padding: 7px 15px;
+  cursor: pointer;
+}
+
+.target {
+  position: absolute;
+  border-bottom: 4px solid transparent;
+  z-index: -1;
+  transform: translateX(-60px);
+}
+
+.mynav a,
+.target {
+  transition: all .35s ease-in-out;
+}
+
+</style>
+
+<script>
+(function() {
+const links = document.querySelectorAll(".mynav a");
+
+function mouseenterFunc() {
+  if (!this.parentNode.classList.contains("active")) {
+    for (let i = 0; i < links.length; i++) {
+      if (links[i].parentNode.classList.contains("active")) {
+        links[i].parentNode.classList.remove("active");
+      }
+      links[i].style.opacity = "0.25";
+    }
+
+    this.parentNode.classList.add("active");
+    this.style.opacity = "1";
+
+   
+  }
+}
+
+for (let i = 0; i < links.length; i++) {
+  links[i].addEventListener("mouseenter", mouseenterFunc);
+}
+
+})();
+
+
+/////////////////////// Template js //////////////////////////////////
+function template_home(){
+            
+            var template=`
+            <div class="container cont-display showhome " >
+                <div class="row justify-content-center align-items-center h-100  ">
+                    <div>
+                        <h1 id="titleSlide">Admisión </h1>
+                        <h1 id="subtitleSlide">2019 </h1>
+                    </div>
+              </div>         
+            `;
+            
+            return template;
+        } 
+function template_singin(){
+            
+            var template=`
+            <div class="showsingin">
+                {% block singin %}
+                  {% from "macro_show_singin.html" import showsingin %}
+                  {{showsingin()}}
+                {% endblock %}
+              </div>
+                 
+            `;
+            
+            return template;
+        } 
+function template_singup(){
+            
+            var template=`
+            <div class="showsinup">
+                {% block singup %}
+                  {% from "macro_show_singup.html" import showsingup %}
+                  {{showsingup()}}
+                {% endblock %}
+              </div>
+                 
+            `;
+          
+            return template;
+        }  
+        
+       
+
+var template= document.querySelector(".routers");
+const click_home = document.querySelector("#home");
+const click_singin = document.querySelector("#singin");
+const click_singup = document.querySelector("#singup");
+
+const showhome = document.querySelector(".showhome");
+const showsingin = document.querySelector(".showsingin");
+var  router;
+click_home.addEventListener("click",function(){
+    template.innerHTML=template_home();
+},false);
+template.innerHTML=template_home();
+click_singin.addEventListener("click",function(){
+    template.innerHTML=template_singin();
+    validationSingIn();
+});
+click_singup.addEventListener("click",function(){
+    template.innerHTML=template_singup();
+    validationSingUp();
+});
+
+
+validationSingIn = () => {
+      var pattern = /\d/;
+      const cedula = document.querySelector("#inputCi");
+      cedula.addEventListener("keypress", function(e){
+        if (!pattern.test(String.fromCharCode(e.keyCode)) || this.value.length == 8)
+        e.preventDefault();
+        });
+};
+validationSingUp = () => {
+      var pattern = /\d/;
+      const cedula = document.querySelector("#inputCi");
+      cedula.addEventListener("keypress", function(e){
+        if (!pattern.test(String.fromCharCode(e.keyCode)) || this.value.length == 8)
+        e.preventDefault();
+        });
+      const phone = document.querySelector("#inputPhone");
+      phone.addEventListener("keypress", function(e){
+        
+        if (!pattern.test(String.fromCharCode(e.keyCode)) || this.value.length == 11)
+       
+        e.preventDefault();
+        });
+
+};
+
+
+
+           
+</script>
