@@ -134,7 +134,7 @@ def main():
         pprint(resbody.get('tests'))
         jsonGetTest = json.dumps(resbody)
         DecoGetTest  = json.loads(jsonGetTest)
-        
+        pprint
         #dando formato a fechar
         for test in tests:
             inscription_start = time.localtime(test['inscription_start'])
