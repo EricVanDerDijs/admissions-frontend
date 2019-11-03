@@ -2,6 +2,7 @@ from flask import Flask, render_template, json, request , redirect,url_for, sess
 from pprint import pprint
 from custom_socketserver.go import Go
 import asyncio, sys
+import time
 
 host = 'localhost'
 port = 3010
@@ -107,6 +108,8 @@ def main():
     # hago la inicialización del loop aquí por que, no se de que forma manejan
     # los hilos, entonces, creo que es un poco mpas seguro de esta forma
     loop = None
+    
+    
     try:
         # chequeo si hay un loop corriendo
         loop = asyncio.get_event_loop()
@@ -127,17 +130,188 @@ def main():
         resheader, resbody = loop.run_until_complete(
             Go('GET', '/tests/user', host_port = (host, port), body=body).as_coroutine()
         )
-        pprint(resbody.get('tests')[0])
+        tests = resbody.get('tests')
+        pprint(resbody.get('tests'))
+        jsonGetTest = json.dumps(resbody)
+        DecoGetTest  = json.loads(jsonGetTest)
+        
+        #dando formato a fechar
+        for test in tests:
+            inscription_start = time.localtime(test['inscription_start'])
+            inscription_start_f = time.strftime("%Y-%m-%d %H:%M:%S", inscription_start)
+            inscription_end = time.localtime(test['inscription_end'])
+            inscription_end_f = time.strftime("%Y-%m-%d %H:%M:%S", inscription_end)
+
+            test_end = time.localtime(test['test_end'])
+            test_end_f = time.strftime("%Y-%m-%d %H:%M:%S", test_end)
+
+            test_start = time.localtime(test['test_end'])
+            test_start_f = time.strftime("%Y-%m-%d %H:%M:%S", test_start)
+
+            
+            test['inscription_start'] = inscription_start_f
+            test['inscription_end'] = inscription_end_f
+            test['test_end'] = test_end_f
+            test['test_start'] = test_start_f
+
+        
+        for test in tests:   
+            idtest = test['id']
+            status_onroll = False
+            if request.method == 'POST':
+                btn_onroll= request.form['btn_onroll']
+                
+                print("btn_onroll", btn_onroll ,idtest )
+                if int(btn_onroll) == idtest:
+                    onroll(token,idtest)
+                    try:
+                        print("inscripcion para",idtest,onroll(token,idtest)['error_code'] ) 
+                        if(str(onroll(token,idtest)['error_code']) == "user-already-enrolled") or (str(onroll(token,idtest)['message']==True)):
+                            status_onroll = True
+                            print("inscrito",status_onroll )
+                            
+                    except KeyError: 
+
+                        if(str(onroll(token,idtest)['error_code']) == "enrolment-period-missed"):
+                            status_onroll = False
+                            print("no inscrito",status_onroll )
+                            test['userHasEnrrolled'] = status_onroll
+
+                    print("status inscrito",status_onroll ) 
+                    if status_onroll:
+                        print("prueba activa")   
+                        test = test['type']
+                        return redirect(url_for('pres',idtest=idtest  ))
+                    else: 
+                        print("prueba inactiva")   
+                
+                
+        #pprint(resbody.get('tests'))
+                    
 
         if (loop.is_running()):
             loop.stop()
         loop.close()
 
-        return render_template('main.html',name=name,lastName = lastName ) 
+
+        return render_template('main.html',name=name,lastName = lastName, tests=tests ) 
     else:
         if (loop.is_running()):
             loop.stop()
         loop.close()
         return redirect(url_for('home') )
 
+def onroll(token,idtest):
+    loop = None
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+
+    body = {
+        'token': token,
+        'test_id': idtest
+        }
+
+    resheader, resbody = loop.run_until_complete(
+        Go('POST', '/tests/user/enroll', host_port = (host, port), body=body).as_coroutine()
+        )
+
+    if (loop.is_running()):
+        loop.stop()
+        loop.close()
+
+    return resbody
+@app.route('/pres',methods=['GET','POST'])
+def pres():
+    idtest=request.args.get('idtest')
+    print(str(idtest))
+    if request.method == 'POST':
+        btn_accept= request.form['btn_accept']   
+        print("hollaaaas",btn_accept)
+        return redirect(url_for('test',idtest=1 ))
+    return render_template('/presentar.html',idtest=idtest)
+
+
+@app.route('/newtest',methods=['GET','POST'])
+def test():
+    loop = None
+    
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+        
+    if 'token' in session:
+        token = session['token']
+    
+    idtest=request.args.get('idtest')
+    print('parametro id',idtest)
+    body = {
+        'token': token,
+        'test_id': int(idtest),
+        'location_code': 'LOC_HUM_1'
+        }
+
+    resheader, resbody = loop.run_until_complete(
+        Go('GET', '/tests/new', host_port = (host, port), body=body).as_coroutine()
+        )
+    if (loop.is_running()):
+        loop.stop()
+        loop.close()
+
+   
+    
+    try:
+        ## se crear una variable de secion para pasar la data cuando redirecciona al main
+        global test 
+        test = resbody["test"]
+        if str(resbody["test"]):
+            print ("prueba",idtest , test)
+             
+            return render_template('test.html',test=test)
+
+
+    except KeyError:
+        if str(resbody["error_code"]) == "test-already-generated":
+            print ( test)
+            return render_template('test.html',test=test)
+        if str(resbody["error_code"]) == "wrong-location-code":
+            return str(resbody["error_code"])
+    print ("prueba",idtest)
+    
+@app.route('/result',methods=['GET','POST'])
+def result():
+   
+    
+    loop = None
+    idtest = request.form['idtest']
+    point = request.form['point']
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+        
+    if 'token' in session:
+        token = session['token']
+    
+    
+    
+    body = {
+        'token': token,
+        'test_id':int(idtest),
+        
+        }
+
+    resheader, resbody = loop.run_until_complete(
+        Go('GET', '/results/test', host_port = (host, port), body=body).as_coroutine()
+        )
+    if (loop.is_running()):
+        loop.stop()
+        loop.close()
+    
+    return "resultados " + point + idtest +str(resbody)
 app.run(host='localhost', port=4000 ,debug =True)    

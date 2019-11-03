@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="presentador">
+    <h4>¿Desea presentar la prueba en este momento?</h4>
+     <form action="/pres" method="post">
+        <input type="hidden" id="btn_accept" name="btn_accept" value="{{idtest}}" > 
+        <button style="background:rgb(16, 192, 54)" type="submit" value="Aceptar" />
+        <p>Aceptar</p>
+    </form>
+    <br>
+    <a href="/main">
+        <button style="background:crimson" >No</button>
+    </a>
+    </div>
+    
+</body>
+<style>
+    button{
+        width: 150px;
+        height: 50px;
+        color: #fff;
+        cursor: pointer;
+    }
+    #presentador{
+        text-align: center
+    }
+</style>
+</html>

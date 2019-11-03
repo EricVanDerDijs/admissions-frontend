@@ -55,24 +55,58 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
       <div class="container-fluid">
-        <h5 class="mt-4 ">Aspirantes</h5>
+        <h5 class="mt-4 col-12">Pruebas actuales</h5>
         
+      </div>
+      <div>
+        <table>
+          <tbody>
+           
+            {% for test in tests %}
+              <tr>
+                <h5>{{test['id']}} {{test['type']}} </h5>
+                <td> <h5>Examen</h5> <h6>{{test['type']}}</h6></td>
+                <td>
+                 <p>la inscripcion empieza el {{test['inscription_start']}} y teminal el {{test['inscription_end']}} </p>
+                 <p>inicio de pueba {{test['test_end']}} y termina el {{test['test_start']}} </p>
+                </td>
+                <td>
+                  <form method="post">
+                    <input type="hidden" id="btn_onroll" name="btn_onroll" value=" {{test['id']}}"> 
+                    <button type="submit" style="width:150px;height: 50px; " value="inscribirse" />
+                    {% if test['userHasEnrrolled'] == False %}
+                    <p style="display: flex;justify-content: center;">inscribir</p>
+                    {% endif %}
+                    {% if test['userHasEnrrolled'] == True %}
+                    <p style="display: flex;justify-content: center;">presentar</p>
+                    {% endif %}
+                  </form>
+                 
+                  
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
     <!-- /#page-content-wrapper -->
-
+  
   </div>
   <!-- /#wrapper -->
 
 
 </body>
 <style type="text/css">
-			
+		td{
+      padding: 15px;
+  
+    }
     * {
         margin:0px;
         padding:0px;
     }
-    
+    p{padding: 0;margin: 0}
     #header {
         margin:auto;
         width:500px;
@@ -124,4 +158,9 @@
     }
     
 </style>
+
+
+
+
+
 </html>

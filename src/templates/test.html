@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h2 style="text-align: center;background: cornflowerblue; color: #fff; padding: 25px;margin-top: 0">Prueba</h2>
+        {% for question in test['questions'] %}
+        <ul>
+            <li>{{question['question']}}</li>
+            <li>opciones: {{question['options']}}</li>
+            <li>Valor: {{question['score']}}</li>
+            <li>area de conocimiento: {{question['knowledge_area']}}</li>
+        </ul>   
+        {% endfor %} 
+       
+        <form action="/result"  style="text-align: center" method="post">
+            <input type="hidden" id="idtest" name="idtest" value=" {{test['id']}}"> 
+            <input type="hidden" id="point" name="point" value=" 100"> 
+            <button type="submit" style="background:rgb(16, 192, 54); color:#fff; width: 150px" value="prueba"/>
+            <p>Termine</p>
+          </form>
+ 
+</body>
+</html>
