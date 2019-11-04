@@ -3,7 +3,6 @@ from pprint import pprint
 from custom_socketserver.go import Go
 import asyncio, sys
 import time
-from shlex import split
 
 host = 'localhost'
 port = 3010
@@ -57,7 +56,36 @@ def signup():
     jsonSingUp = json.dumps(data)
 
     return "registro exitoso"
+
+@app.route('/logout',methods=['GET','POST'])
+def logout():
+    loop = None
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+    ci = session['data']['user']['ci']
+    email = session['data']['user']['ci']
+    token = session['token']
+    body = {
+        'ci': int(ci),
+        'email': email,
+        'token':token
+	}   
     
+    # llamada asincrona
+    header, data = loop.run_until_complete(
+        Go('POST', '/logout', host_port = (host, port), body=body).as_coroutine()
+    )
+    print("logaout"+ str(data))
+    # Creo que es adecuado cerrar el loop al finalizar el handler
+    if (loop.is_running()):
+        loop.stop()
+    loop.close()
+    return redirect(url_for('home'))
+  
+ 
 
 
 @app.route('/signin',methods=['GET','POST'])
@@ -352,4 +380,4 @@ def get_results(token,idtest):
         loop.close()
     return resbody
 
-app.run(host='localhost', port=4000 ,debug =True)    
+app.run(host='localhost', port=4010 ,debug =True)    

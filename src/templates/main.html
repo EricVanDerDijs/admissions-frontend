@@ -26,12 +26,14 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav ml-auto mt-2 mt-lg-0 nav">
                     <li class="nav-item active dropdown-toggle">
-                            Perfil
+                            Sesión
                                 <ul>
-                                    <li><a href="">Submenu1</a></li>
-                                    <li><a href="">Submenu2</a></li>
-                                    <li><a href="">Submenu3</a></li>
-                                    <li><a href="">Submenu4</a></li>
+                                    <li>
+                                    <form action="/logout" method="post">
+                                        <button type="submit" style="width:150px;height: 50px; " value="inscribirse" />
+                                        <a>cerrar </a> 
+                                    </form>
+                                    </li>
                                 </ul>
                             </li>
                     </li>
@@ -40,16 +42,16 @@
                   </ul>
                 </div>
               </nav>
-  <div class="d-flex" id="wrapper">
+  <div class="d-flex" id="wrapper"  style="display: flex;justify-content: center;align-items: center">
 
     <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
+   <!--  <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="list-group list-group-flush">
         <a href="#" class="list-group-item list-group-item-action bg-light">Estudiantes</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Prueba</a>
     
       </div>
-    </div>
+    </div> -->
     <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
@@ -58,7 +60,7 @@
         <h5 class="mt-4 col-12">Pruebas actuales</h5>
         
       </div>
-      <div>
+      <div style="width: 100%; display: flex;justify-content: center;align-items: center">
         <table>
           <tbody>
            

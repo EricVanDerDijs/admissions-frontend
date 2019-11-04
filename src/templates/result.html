@@ -10,39 +10,49 @@
 <body>
     <p>RESULTADOS</p>
     
-   
-    <table>
-        <tbody>
-            <tr>
-                <td><h5>Preguntas</h5>
-                    {% for question in result['result']['questions'] %}
-                        <p>{{question.question}}</p> 
-                    {% endfor %}
-                </td>
-                <td><h5>Preguntas</h5>
-                    {% for answer in result['result']['answers'] %}
-                        <p>{{answer}}</p> 
-                    {% endfor %}
-                </td>
-                <td> <h5>puntos por pregunta</h5>
-                    {% for score_per_question in result['result']['score_per_question'] %}
-                        <p> {{score_per_question}}</p>
-                    {% endfor %}
-                </td>
-           
-           
-            </tr>
-            <td>
-                    <p>Total puntos: {{result['result']['score']}} </p>
-            </td>
-               
-            
-        </tbody>
-    </table>
+   <div style="display: flex; justify-content: center;">
+        <table>
+                <tbody>
+                    <tr >
+                        <td style="background: rgb(255, 202, 183)"><h5>Pregunta</h5>
+                            {% for question in result['result']['questions'] %}
+                                <p>{{question.question}}</p> 
+                            {% endfor %}
+                        </td>
+                        <td style="background: rgb(162, 240, 207)"><h5>respuesta</h5>
+                            {% for answer in result['result']['answers'] %}
+                                <p>{{answer}}</p> 
+                            {% endfor %}
+                        </td>
+                        <td style="background: rgb(200, 213, 255)"> <h5>puntos</h5>
+                            {% for score_per_question in result['result']['score_per_question'] %}
+                                <p> {{score_per_question}}</p>
+                            {% endfor %}
+                        </td>
+                   
+                   
+                    </tr>
+                    <td>
+                            <p>Total puntos: {{result['result']['score']}} </p>
+                    </td>
+                       
+                    
+                </tbody>
+            </table>
+   </div>
+    
     
 
     
   
     
 </body>
+<style>
+p,h5{
+    text-align: center
+}
+td{
+   width: 200px;
+}
+</style>
 </html>
