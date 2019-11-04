@@ -3,9 +3,22 @@ from pprint import pprint
 from custom_socketserver.go import Go
 import asyncio, sys
 import time
+import sys
 
-#host = 'localhost'
-#port = 3010
+if(len(sys.argv) > 2):
+    print("##################### host configurado ##########################")
+    print ("El nombre del programa es " + str(sys.argv[0]))
+    print ("Host " + str(sys.argv[1]))
+    print ("port " + str(sys.argv[2]))
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+else:
+    print("##################### Hostport por defecto ##########################")
+    host = 'localhost'
+    port = 3010
+
+
+
 app = Flask(__name__)
 app.secret_key = 'secret_key'
  
@@ -15,7 +28,8 @@ app.secret_key = 'secret_key'
 def config():
     ip = session['ip']
     port = session['port']
-    print(" ip y puerto cambiado: " + ip + ":"+ port)
+
+    print(" ip y puerto por defecto: " + ip + "/"+ port)
     return render_template('/config.html',ip=ip,port=port)
 
 @app.route('/dataconfig',methods=['GET','POST'])
@@ -35,7 +49,7 @@ def home():
     session['port'] = "3010"
     ip = session['ip']
     port = session['port']
-    print(" ip y puerto por defecto: " + ip + ":"+ port)
+    print(" ip y puerto por defecto: " + ip + "/"+ port)
     return render_template('index.html')
 
 @app.route('/signup',methods=['POST'])
@@ -66,11 +80,10 @@ def signup():
         'last_name': lastName
     
     }
-    ip = session['ip']
-    port = session['port']
+    
     # llamada asincrona
     header, data = loop.run_until_complete(
-        Go('POST', '/signup', host_port = (ip, int(port)), body=body).as_coroutine()
+        Go('POST', '/signup', host_port = (host, port), body=body).as_coroutine()
     )
 
     print(data, file=sys.stderr)
@@ -101,10 +114,8 @@ def logout():
 	}   
     
     # llamada asincrona
-    ip = session['ip']
-    port = session['port']
     header, data = loop.run_until_complete(
-        Go('POST', '/logout', host_port = (ip,int(port)), body=body).as_coroutine()
+        Go('POST', '/logout', host_port = (host, port), body=body).as_coroutine()
     )
     print("logaout"+ str(data))
     # Creo que es adecuado cerrar el loop al finalizar el handler
@@ -137,10 +148,8 @@ def signin():
 	}
     
     # llamada asincrona
-    ip = session['ip']
-    port = session['port']
     header, data = loop.run_until_complete(
-        Go('POST', '/signin', host_port = (ip, int(port)), body=body).as_coroutine()
+        Go('POST', '/signin', host_port = (host, port), body=body).as_coroutine()
     )
     
     # Creo que es adecuado cerrar el loop al finalizar el handler
@@ -185,10 +194,9 @@ def main():
         body = {
             'token': token,
         }
-        ip = session['ip']
-        port = session['port']
+
         resheader, resbody = loop.run_until_complete(
-            Go('GET', '/tests/user', host_port = (ip, int(port)), body=body).as_coroutine()
+            Go('GET', '/tests/user', host_port = (host, port), body=body).as_coroutine()
         )
         tests = resbody.get('tests')
         pprint(resbody.get('tests'))
@@ -229,7 +237,6 @@ def main():
                         if(str(onroll(token,idtest)['error_code']) == "user-already-enrolled") or (str(onroll(token,idtest)['message']==True)):
                             status_onroll = True
                             print("inscrito",status_onroll )
-                            
                             
                     except KeyError: 
 
@@ -274,10 +281,9 @@ def onroll(token,idtest):
         'token': token,
         'test_id': idtest
         }
-    ip = session['ip']
-    port = session['port']
+
     resheader, resbody = loop.run_until_complete(
-        Go('POST', '/tests/user/enroll', host_port = (ip, int(port)), body=body).as_coroutine()
+        Go('POST', '/tests/user/enroll', host_port = (host, port), body=body).as_coroutine()
         )
 
     if (loop.is_running()):
@@ -316,10 +322,9 @@ def test():
         'test_id': int(idtest),
         'location_code': 'LOC_HUM_1'
         }
-    ip = session['ip']
-    port = session['port']
+
     resheader, resbody = loop.run_until_complete(
-        Go('GET', '/tests/new', host_port = (ip, int(port)), body=body).as_coroutine()
+        Go('GET', '/tests/new', host_port = (host, port), body=body).as_coroutine()
         )
     if (loop.is_running()):
         loop.stop()
@@ -375,10 +380,9 @@ def result():
         'location_code': 'LOC_HUM_1',
         'answers': [int(select_quest_1),int(select_quest_2),int(select_quest_3),int(select_quest_4),int(select_quest_5)]
         }
-    ip = session['ip']
-    port = session['port']
+
     resheader, resbody = loop.run_until_complete(
-        Go('POST', '/results', host_port = (ip, int(port)), body=body).as_coroutine()
+        Go('POST', '/results', host_port = (host, port), body=body).as_coroutine()
         )
     
     get_results(token,idtest)
@@ -406,10 +410,9 @@ def get_results(token,idtest):
         'test_id':int(idtest),
         
         }
-    ip = session['ip']
-    port = session['port']
+
     resheader, resbody = loop.run_until_complete(
-        Go('GET', '/results/test', host_port = (ip, int(port)), body=body).as_coroutine()
+        Go('GET', '/results/test', host_port = (host, port), body=body).as_coroutine()
         )
     if (loop.is_running()):
         loop.stop()
