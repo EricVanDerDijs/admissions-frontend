@@ -24,32 +24,11 @@ app.secret_key = 'secret_key'
  
 
 
-@app.route('/config',methods=['GET','POST'])
-def config():
-    ip = session['ip']
-    port = session['port']
-
-    print(" ip y puerto por defecto: " + ip + "/"+ port)
-    return render_template('/config.html',ip=ip,port=port)
-
-@app.route('/dataconfig',methods=['GET','POST'])
-def dataconfig():
-    print("el request esssss:" + request.method)
-    
-    ip = request.form.get('ip')
-    port = request.form.get('port')
-    session['ip'] = ip
-    session['port'] = port
- 
-    return redirect(url_for('config'))
 
 @app.route('/')
 def home():
-    session['ip'] ="172.17.0.1"
-    session['port'] = "3010"
-    ip = session['ip']
-    port = session['port']
-    print(" ip y puerto por defecto: " + ip + "/"+ port)
+
+
     return render_template('index.html')
 
 @app.route('/signup',methods=['POST'])
