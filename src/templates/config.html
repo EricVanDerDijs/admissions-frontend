@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <form action="/dataconfig" class="form-signin" method="post">
+            <label for="port" class="sr-only">IP</label>
+            <input type="text" name="ip" id="ip" class="form-control" placeholder="ip" required autofocus>
+            <p>direccion: {{ip}}</p>
+            <label for="port" class="sr-only">Port</label>
+            <input type="text" name="port" id="port" class="form-control" placeholder="port" required autofocus>
+            <p>Puerto: {{port}}</p>
+            <button id="btnSignin" class="btn btn-lg btn-primary btn-block" type="submit" method="post">Enviar</button>
+      </form>
+</body>
+</html>
