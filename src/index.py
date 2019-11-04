@@ -3,6 +3,7 @@ from pprint import pprint
 from custom_socketserver.go import Go
 import asyncio, sys
 import time
+from shlex import split
 
 host = 'localhost'
 port = 3010
@@ -221,7 +222,7 @@ def onroll(token,idtest):
     if (loop.is_running()):
         loop.stop()
         loop.close()
-
+    
     return resbody
 @app.route('/pres',methods=['GET','POST'])
 def pres():
@@ -270,7 +271,7 @@ def test():
         test = resbody["test"]
         if str(resbody["test"]):
             print ("prueba",idtest , test)
-             
+            
             return render_template('test.html',test=test)
 
 
@@ -303,6 +304,37 @@ def result():
     body = {
         'token': token,
         'test_id':int(idtest),
+        'location_code': 'LOC_HUM_1',
+        'answers': [1,1,1,1,1]
+        }
+
+    resheader, resbody = loop.run_until_complete(
+        Go('POST', '/results', host_port = (host, port), body=body).as_coroutine()
+        )
+    
+    get_results(token,idtest)
+    result = get_results(token,idtest)
+    if (loop.is_running()):
+        loop.stop()
+        loop.close()
+    
+    #return "resultados " + point + idtest +str(resbody) + "Evaluacion de resultados"+ str(evaluateResult(token,idtest))
+    return render_template('result.html', result=result)
+def get_results(token,idtest):
+    loop = None
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+        
+    if 'token' in session:
+        token = session['token']
+    print("evaluate token" + token)
+    print("evaluate id" + idtest)
+    body = {
+        'token': token,
+        'test_id':int(idtest),
         
         }
 
@@ -312,6 +344,6 @@ def result():
     if (loop.is_running()):
         loop.stop()
         loop.close()
-    
-    return "resultados " + point + idtest +str(resbody)
+    return resbody
+
 app.run(host='localhost', port=4000 ,debug =True)    

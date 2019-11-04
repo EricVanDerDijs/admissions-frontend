@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p>RESULTADOS</p>
+    
+   
+    <table>
+        <tbody>
+            <tr>
+                <td><h5>Preguntas</h5>
+                    {% for question in result['result']['questions'] %}
+                        <p>{{question.question}}</p> 
+                    {% endfor %}
+                </td>
+                <td><h5>Preguntas</h5>
+                    {% for answer in result['result']['answers'] %}
+                        <p>{{answer}}</p> 
+                    {% endfor %}
+                </td>
+                <td> <h5>puntos por pregunta</h5>
+                    {% for score_per_question in result['result']['score_per_question'] %}
+                        <p> {{score_per_question}}</p>
+                    {% endfor %}
+                </td>
+           
+           
+            </tr>
+            <td>
+                    <p>Total puntos: {{result['result']['score']}} </p>
+            </td>
+               
+            
+        </tbody>
+    </table>
+    
+
+    
+  
+    
+</body>
+</html>

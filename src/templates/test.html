@@ -8,12 +8,22 @@
 </head>
 <body>
     <h2 style="text-align: center;background: cornflowerblue; color: #fff; padding: 25px;margin-top: 0">Prueba</h2>
-        {% for question in test['questions'] %}
-        <ul>
-            <li>{{question['question']}}</li>
-            <li>opciones: {{question['options']}}</li>
-            <li>Valor: {{question['score']}}</li>
-            <li>area de conocimiento: {{question['knowledge_area']}}</li>
+        {% for question in test.questions recursive %}
+      
+        <ul>     
+                <!-- <li>numero {{ question.id }}</li>   -->
+                <li>Valor {{ question.score }}</li>  
+                <li>{{ question.question }}</li> 
+                <select>
+                {% set options = "".join(question.options).replace('[','').replace(']','')  %}
+                    {% set op = options.split(',') %}
+                        {% for elem in op -%}
+                        {% set optionV =  elem.replace('"', '') %}
+                       
+                        <option value="{{optionV}}">{{optionV}}</option>  
+                        {% endfor -%} 
+                </select> 
+               
         </ul>   
         {% endfor %} 
        
@@ -25,4 +35,5 @@
           </form>
  
 </body>
+
 </html>
