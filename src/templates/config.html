@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+    <div style="text-align: center">
         <form action="/dataconfig" class="form-signin" method="post">
             <label for="port" class="sr-only">IP</label>
             <input type="text" name="ip" id="ip" class="form-control" placeholder="ip" required autofocus>
@@ -16,5 +17,11 @@
             <p>Puerto: {{port}}</p>
             <button id="btnSignin" class="btn btn-lg btn-primary btn-block" type="submit" method="post">Enviar</button>
       </form>
+    </div>
+      <div style="text-align: center; margin: 50px">
+            <a href="/main"> <button>
+                Ir a inicio
+            </button> </a>
+        </div>
 </body>
 </html>
