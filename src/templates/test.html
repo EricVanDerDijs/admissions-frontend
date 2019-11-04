@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+    <form action="/result"  style="text-align: center" method="post">
     <h2 style="text-align: center;background: cornflowerblue; color: #fff; padding: 25px;margin-top: 0">Prueba</h2>
         {% for question in test.questions recursive %}
       
@@ -14,20 +15,19 @@
                 <!-- <li>numero {{ question.id }}</li>   -->
                 <li>Valor {{ question.score }}</li>  
                 <li>{{ question.question }}</li> 
-                <select>
+                <select name="{{loop.index}}" >
                 {% set options = "".join(question.options).replace('[','').replace(']','')  %}
                     {% set op = options.split(',') %}
                         {% for elem in op -%}
                         {% set optionV =  elem.replace('"', '') %}
                        
-                        <option value="{{optionV}}">{{optionV}}</option>  
+                        <option value="{{loop.index}}">{{loop.index}}-{{optionV}}</option>  
                         {% endfor -%} 
                 </select> 
                
         </ul>   
         {% endfor %} 
        
-        <form action="/result"  style="text-align: center" method="post">
             <input type="hidden" id="idtest" name="idtest" value=" {{test['id']}}"> 
             <input type="hidden" id="point" name="point" value=" 100"> 
             <button type="submit" style="background:rgb(16, 192, 54); color:#fff; width: 150px" value="prueba"/>

@@ -290,6 +290,12 @@ def result():
     loop = None
     idtest = request.form['idtest']
     point = request.form['point']
+    select_quest_1 = request.form['1']
+    select_quest_2 = request.form['2']
+    select_quest_3 = request.form['3']
+    select_quest_4 = request.form['4']
+    select_quest_5 = request.form['5']
+    
     try:
         # chequeo si hay un loop corriendo
         loop = asyncio.get_event_loop()
@@ -305,7 +311,7 @@ def result():
         'token': token,
         'test_id':int(idtest),
         'location_code': 'LOC_HUM_1',
-        'answers': [1,1,1,1,1]
+        'answers': [int(select_quest_1),int(select_quest_2),int(select_quest_3),int(select_quest_4),int(select_quest_5)]
         }
 
     resheader, resbody = loop.run_until_complete(
