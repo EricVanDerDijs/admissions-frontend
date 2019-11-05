@@ -316,7 +316,7 @@ def test():
     try:
         ## se crear una variable de secion para pasar la data cuando redirecciona al main
         test = resbody["test"]
-        return redirect(url_for('showtest'))
+        return redirect(url_for('showtest',idtest=idtest))
     except KeyError:
         return redirect(url_for('showtest',idtest=idtest))
 
