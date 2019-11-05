@@ -273,17 +273,19 @@ def onroll(token,idtest):
 @app.route('/pres',methods=['GET','POST'])
 def pres():
     idtest=request.args.get('idtest')
-    print(str(idtest))
+    
+    print("presentar "+ str(idtest))
     if request.method == 'POST':
-        btn_accept= request.form['btn_accept']   
-        print("hollaaaas",btn_accept)
-        return redirect(url_for('test',idtest=1 ))
+        codetest= request.form.get('codetest')
+        return redirect(url_for('test',idtest=idtest,codetest=codetest  ))
     return render_template('/presentar.html',idtest=idtest)
 
 
-@app.route('/newtest',methods=['GET','POST'])
+@app.route('/test',methods=['GET','POST'])
 def test():
     loop = None
+    idtest=request.args.get('idtest')
+    codetest= request.args.get('codetest')
     
     try:
         # chequeo si hay un loop corriendo
@@ -294,48 +296,99 @@ def test():
     if 'token' in session:
         token = session['token']
     
-    idtest=request.args.get('idtest')
-    print('parametro id',idtest)
+    
     body = {
         'token': token,
         'test_id': int(idtest),
-        'location_code': 'LOC_HUM_1'
+        'location_code': codetest
         }
-
+    print('parametro id ',codetest)
     resheader, resbody = loop.run_until_complete(
         Go('GET', '/tests/new', host_port = (host, port), body=body).as_coroutine()
         )
+    print(" test menssage ######### : "+ str(resbody))
+    print("generador de prueba : " + str(resheader))  
     if (loop.is_running()):
         loop.stop()
         loop.close()
 
-   
     
     try:
         ## se crear una variable de secion para pasar la data cuando redirecciona al main
-        global test 
         test = resbody["test"]
-        if str(resbody["test"]):
-            print ("prueba",idtest , test)
-            
-            return render_template('test.html',test=test)
-
-
+        return redirect(url_for('showtest'))
     except KeyError:
-        if str(resbody["error_code"]) == "test-already-generated":
-            print ( test)
-            return render_template('test.html',test=test)
-        if str(resbody["error_code"]) == "wrong-location-code":
-            return str(resbody["error_code"])
-    print ("prueba",idtest)
+        return redirect(url_for('showtest',idtest=idtest))
+
+@app.route('/showtest',methods=['GET','POST'])
+def showtest():
+    idtest = request.args['idtest']
+    loop = None
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+        
+    if 'token' in session:
+        token = session['token']
+    #print("evaluate token" + token)
+    #print("evaluate id" + idtest)
+    body = {
+        'token': token,
+        'test_id':int(idtest),
+        
+        }
+
+    resheader, resbody = loop.run_until_complete(
+        Go('GET', '/results/test', host_port = (host, port), body=body).as_coroutine()
+        )
+    test = resbody['result']
+    pprint(test)
+    if (loop.is_running()):
+        loop.stop()
+        loop.close() 
+    return render_template('/test.html',test=test )
+
+@app.route('/showresult',methods=['GET','POST'])
+def showresult():
+    idtest = request.form['idtest']
+    loop = None
+    try:
+        # chequeo si hay un loop corriendo
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+        
+    if 'token' in session:
+        token = session['token']
+    #print("evaluate token" + token)
+    #print("evaluate id" + idtest)
+    body = {
+        'token': token,
+        'test_id':int(idtest),
+        
+        }
+
+    resheader, resbody = loop.run_until_complete(
+        Go('GET', '/results/test', host_port = (host, port), body=body).as_coroutine()
+        )
+    result = resbody
+    if (loop.is_running()):
+        loop.stop()
+        loop.close() 
     
+    return render_template('result.html', result=result)
+
+
+
+
 @app.route('/result',methods=['GET','POST'])
 def result():
    
     
     loop = None
     idtest = request.form['idtest']
-    point = request.form['point']
     select_quest_1 = request.form['1']
     select_quest_2 = request.form['2']
     select_quest_3 = request.form['3']
@@ -366,6 +419,7 @@ def result():
     
     get_results(token,idtest)
     result = get_results(token,idtest)
+    print("El resultado es : "+ str(result))
     if (loop.is_running()):
         loop.stop()
         loop.close()
@@ -382,8 +436,8 @@ def get_results(token,idtest):
         
     if 'token' in session:
         token = session['token']
-    print("evaluate token" + token)
-    print("evaluate id" + idtest)
+    #print("evaluate token" + token)
+    #print("evaluate id" + idtest)
     body = {
         'token': token,
         'test_id':int(idtest),
@@ -398,4 +452,4 @@ def get_results(token,idtest):
         loop.close()
     return resbody
 
-app.run(host='localhost', port=4010 ,debug =True)    
+app.run(host='localhost', port=4000 ,debug =True)    

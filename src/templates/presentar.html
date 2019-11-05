@@ -9,8 +9,12 @@
 <body>
     <div id="presentador">
     <h4>¿Desea presentar la prueba en este momento?</h4>
-     <form action="/pres" method="post">
-        <input type="hidden" id="btn_accept" name="btn_accept" value="{{idtest}}" > 
+     <form method="post">
+        <label for=""> Coloca el codigo del examen</label>
+
+        <input type="text" id="codetest" name="codetest" value="ejemplo LOC_HUM_1">
+        <br>
+        <input type="hidden" id="idtest" name="idtest" value="{{idtest}}" > 
         <button style="background:rgb(16, 192, 54)" type="submit" value="Aceptar" />
         <p>Aceptar</p>
     </form>

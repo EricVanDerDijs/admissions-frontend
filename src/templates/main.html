@@ -74,19 +74,35 @@
                  <p>inicio de pueba {{test['test_end']}} y termina el {{test['test_start']}} </p>
                 </td>
                 <td>
-                  <form method="post">
-                    <input type="hidden" id="btn_onroll" name="btn_onroll" value=" {{test['id']}}"> 
-                    <button type="submit" style="width:150px;height: 50px; " value="inscribirse" />
+                   
+                     
                     {% if test['userHasEnrrolled'] == False %}
-                    <p style="display: flex;justify-content: center;">inscribir</p>
+                    <form method="post">
+                        <input type="hidden" id="btn_onroll" name="btn_onroll" value=" {{test['id']}}"> 
+                        <button type="submit" style="width:150px;height: 50px; background: rgb(247, 148, 109)"" value="inscribirse" />
+                        <p style="display: flex;justify-content: center;">Inscribir</p>
+                    </form>
                     {% endif %}
                     {% if test['userHasEnrrolled'] == True %}
-                    <p style="display: flex;justify-content: center;">presentar</p>
+                    {% if test['hasResult'] == False %} 
+                    <form method="post">
+                        <input type="hidden" id="btn_onroll" name="btn_onroll" value=" {{test['id']}}"> 
+                        <button type="submit" style="width:150px;height: 50px; background: rgb(109, 247, 139)"" value="inscribirse" />
+                        <p style="display: flex;justify-content: center;">Presentar</p>
+                    </form>
                     {% endif %}
+                    {% if test['hasResult'] == True %} 
+                    <form action="/showresult"  style="text-align: center;padding: 0; margin: 0" method="post">
+                      <input type="hidden" id="idtest" name="idtest" value=" {{test['id']}}"> 
+                      <button type="submit"  style="width:150px;height: 50px; background: rgb(109, 203, 247)" value="prueba"/>
+                      <p>Resultado</p>
                   </form>
-                 
-                  
+                    
+                    {% endif %}
+                    {% endif %}
+                
                 </td>
+           
               </tr>
             {% endfor %}
           </tbody>
